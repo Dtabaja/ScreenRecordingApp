@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "146310474887",
+    "firebase_url": "https://screenrecordingapp-5d2f2-default-rtdb.firebaseio.com",
+    "project_id": "screenrecordingapp-5d2f2",
+    "storage_bucket": "screenrecordingapp-5d2f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146310474887:android:d95c1a605ca9d2f45d9c22",
+        "android_client_info": {
+          "package_name": "com.classy.screenrecordingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146310474887-i0udm4r5eonm7b71ird1lq5a9dce3r23.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBH4o9BL-BZCVhm1MSgrcHD8EDwnolEtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146310474887-i0udm4r5eonm7b71ird1lq5a9dce3r23.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
