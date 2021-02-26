@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private String fileURI = "C:\\Users\\Daniel Tabaja\\Desktop";
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+    private DatabaseReference mDatabase;
     UploadTask uploadTask;
 
     private static void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        // databaseReference = FirebaseDatabase.getInstance().getReference("video");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Video");
 
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,21 +292,49 @@ public class MainActivity extends AppCompatActivity {
 
     private void UploadVideo() {
         Log.d("ptttttt", "im here: ");
-        StorageReference filePath = storageReference.child((new SimpleDateFormat("dd-MM-yyyy").
-                format(new Date()))).child(new SimpleDateFormat("hh_mm_ss")
-                .format(new Date())+".mp4");
+        StorageReference filePath = storageReference.child("Videos").child((new SimpleDateFormat("dd-MM-yyyy - hh_mm_ss")
+                .format(new Date())+".mp4"));
         Log.d("ptttttt", "im here2: ");
         Uri uri = Uri.fromFile(new File(videoUri));
         Log.d("ptttttt", "im here3: ");
-        filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        /*filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d("ptttttt", "im here4: ");
                 Toast.makeText(MainActivity.this, "Data saved To Movies Directory", Toast.LENGTH_SHORT).show();
-
+                String uploadId = databaseReference.push().getKey();
+                databaseReference.child(uploadId).setValue(filePath);
 
             }
         });
+*/
+        filePath.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Model obj=new Model(uri.toString(),(new SimpleDateFormat("dd-MM-yyyy - hh_mm_ss")
+                                        .format(new Date())));
+                                databaseReference.child(databaseReference.push().getKey()).setValue(obj)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(),"Successfully uploaded",Toast.LENGTH_LONG).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getApplicationContext(),"Failed to upload",Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+
+                            }
+                        });
+                    }
+                });
 
     }
 }
