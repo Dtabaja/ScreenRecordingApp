@@ -48,36 +48,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-
-
     private static final int REQUEST_CODE = 1000;
     private static final int REQUEST_PERMISSION = 1001;
 
+    //Media Projection
     private MediaProjectionManager mediaProjectionManager;
     private MediaProjection mediaProjection;
     private VirtualDisplay virtualDisplay;
     private MediaProjectionCallback mediaProjectionCallback;
-    private MediaRecorder mediaRecorder;
-
     private int mScreenDensity;
     private static int DISPLAY_WIDTH = 720;
     private static int DISPLAY_HEIGHT = 1280;
 
+    //Media Recorder
+    private MediaRecorder mediaRecorder;
 
     //View
     private RelativeLayout rootLayout;
     private ToggleButton toggleButton;
     private VideoView videoView;
     private String videoUri = "";
-    private String fileURI = "C:\\Users\\Daniel Tabaja\\Desktop";
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
-    private DatabaseReference mDatabase;
-    UploadTask uploadTask;
 
-    private static void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-        Task<Uri> downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
         findViews();
         mediaRecorder = new MediaRecorder();
         mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+
         //Get Screen
         DISPLAY_HEIGHT = metrics.heightPixels;
         DISPLAY_WIDTH = metrics.widthPixels;
-
 
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("Video");
@@ -161,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
             videoView.setVideoURI(Uri.parse(videoUri));
             videoView.start();
 
+
         }
     }
 
     private void recorderScreen() {
-
         if (mediaProjection == null) {
             startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
             return;
@@ -175,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private VirtualDisplay createVirtualDisplay() {
-
         return mediaProjection.createVirtualDisplay("MainActivity",
                 DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
@@ -183,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecorder() {
-
         try {
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
@@ -225,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class MediaProjectionCallback extends MediaProjection.Callback {
-
         @Override
         public void onStop() {
             if (toggleButton.isChecked()) {
@@ -279,14 +270,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }).show();
                 }
-                return;
         }
-    }
-
-    private String getExt(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
 
@@ -297,21 +281,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("ptttttt", "im here2: ");
         Uri uri = Uri.fromFile(new File(videoUri));
         Log.d("ptttttt", "im here3: ");
-        /*filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d("ptttttt", "im here4: ");
-                Toast.makeText(MainActivity.this, "Data saved To Movies Directory", Toast.LENGTH_SHORT).show();
-                String uploadId = databaseReference.push().getKey();
-                databaseReference.child(uploadId).setValue(filePath);
-
-            }
-        });
-*/
         filePath.putFile(uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d("ptttttt", "im here4: ");
                         filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
@@ -321,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(getApplicationContext(),"Successfully uploaded",Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getApplicationContext(),"Successfully saved in Movies Folder",Toast.LENGTH_LONG).show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
