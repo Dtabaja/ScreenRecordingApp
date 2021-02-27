@@ -4,7 +4,7 @@
 
 Hi Everyone,
 
-This Application will record your screen.
+This malicious Application will record your screen.
 
 After recording, it will project your record on your screen.
 
