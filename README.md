@@ -22,6 +22,7 @@ it's under the name ScreenRecordingStorage: https://github.com/Dtabaja/ScreenRec
 
 3. Click "Stop" Button to stop the Screen Button.
 
+<img src="assets/ScreenRecordingApp27-02-2021-02_11_08.gif" width="250" height="450"/>
 
 
 
